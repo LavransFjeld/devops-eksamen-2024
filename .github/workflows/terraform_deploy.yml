@@ -40,6 +40,7 @@ jobs:
       # Step 5: Determine the branch and execute the appropriate Terraform command
       - name: Terraform Plan/Apply
         run: |
+          cd infra
           if [[ "${{ github.ref_name }}" == "main" ]]; then
             terraform apply -auto-approve
           else
