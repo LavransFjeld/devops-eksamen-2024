@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: '30-generate-pic Powertools for AWS Lambda (Python) example
+
+  '
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+    Runtime: python3.8
+    Tracing: Active
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+Resources:
+  GenerateImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.lambda_handler
+      CodeUri: GenerateImageFunction
+      Description: Generate Image function
+      Architectures:
+      - x86_64
+      Tracing: Active
+      Environment:
+        Variables:
+          BUCKET_NAME: pgr301-couch-explorers
+          POWERTOOLS_SERVICE_NAME: PowertoolsGenerateImage
+          POWERTOOLS_METRICS_NAMESPACE: Powertools
+          LOG_LEVEL: INFO
+      Events:
+        GenerateImagePath:
+          Type: Api
+          Properties:
+            Path: /generate_image
+            Method: POST
+      Tags:
+        LambdaPowertools: python
+    Metadata:
+      SamResourceId: GenerateImageFunction
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: 'true'
+Outputs:
+  GenerateImageApi:
+    Description: API Gateway endpoint URL for the Generate Image Function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/generate_image
+  GenerateImageFunctionArn:
+    Description: ARN of the Generate Image Lambda Function
+    Value:
+      Fn::GetAtt:
+      - GenerateImageFunction
+      - Arn
