@@ -1,5 +1,5 @@
-resource "aws_iam_role" "lambda_role" {
-  name = "lambda-sqs-role"
+resource "aws_iam_role" "lambda_execution_role" {
+  name = var.lambda_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -65,6 +65,6 @@ resource "aws_iam_policy" "lambda_sqs_permissions" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
-  role       = aws_iam_role.lambda_role.name
+  role       = var.lambda_role_name
   policy_arn = aws_iam_policy.lambda_policy.arn
 }
