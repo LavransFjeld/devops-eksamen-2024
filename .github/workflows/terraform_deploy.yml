@@ -3,8 +3,7 @@ name: Terraform Deploy
 on:
   push:
     branches:
-      - main  # For deployment
-      - '*'   # For testing on other branches
+      - '**'
 
 jobs:
   terraform:
@@ -35,8 +34,10 @@ jobs:
 
       # Step 4: Initialize Terraform
       - name: Terraform Init
-        run: terraform init -backend-config="bucket=pgr301-2024-terraform-state" -backend-config="key=infra/terraform.tfstate" -backend-config="region=eu-west-1"
-
+        run: |
+          cd infra
+          terraform init -reconfigure
+          
       # Step 5: Determine the branch and execute the appropriate Terraform command
       - name: Terraform Plan/Apply
         run: |
