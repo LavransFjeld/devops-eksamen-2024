@@ -33,3 +33,14 @@ variable "lambda_function_name" {
   type        = string
   default     = "image_processor_lambda_30"
 }
+
+variable "alarm_email" {
+  description = "Email address for CloudWatch alarm notifications"
+  type        = string
+  default = "cand30@gmail.com"
+}
+
+variable "alarm_threshold" {
+  description = "Threshold for ApproximateAgeOfOldestMessage in seconds"
+  default     = 60
+}
