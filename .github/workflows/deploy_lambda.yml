@@ -24,7 +24,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        cd sam_lambda_cand30
+        cd sam_lambda_cand30/hello_world
         pip install -r requirements.txt
 
     - name: Deploy SAM Application
