@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SQSClient implements CommandLineRunner {
 
     public static void main(String[] args) {
+        System.out.println("Using SQS Queue URL: " + System.getenv("SQS_QUEUE_URL"));
         SpringApplication.run(SQSClient.class, args);
     }
 
