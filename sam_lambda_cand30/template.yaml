@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam_lambda_thirthty
+
+  Sample SAM Template for sam_lambda_thirthty
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+    LoggingConfig:
+      LogFormat: JSON
+
+Resources:
+  GenerateImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      CodeUri: hello_world
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          BUCKET_NAME: pgr301-couch-explorers
+          CANDIDATE_NUMBER: 30
+      Policies:
+        - S3CrudPolicy:
+            BucketName: pgr301-couch-explorers
+        - Statement:
+            - Effect: Allow
+              Action: 
+                - bedrock:InvokeModel
+              Resource: 
+                - arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-image-generator-v1
+      Events:
+        GenerateImageApi:
+          Type: Api
+          Properties:
+            Path: /generate-image
+            Method: POST
+
+Outputs:
+  GenerateImageApiUrl:
+    Description: API Gateway endpoint URL for Generate Image function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/generate-image/"
+  GenerateImageFunctionArn:
+    Description: ARN of Generate Image Lambda Function
+    Value: !GetAtt GenerateImageFunction.Arn

@@ -1,0 +1,4 @@
+{
+  "httpMethod": "POST",
+  "body": "{\"prompt\": \"Me on top of K2\"}"
+}
