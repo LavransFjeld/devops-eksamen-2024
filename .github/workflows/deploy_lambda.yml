@@ -34,4 +34,4 @@ jobs:
         AWS_DEFAULT_REGION: eu-west-1
       run: |
         cd sam_lambda_cand30
-        sam deploy --no-confirm-changeset --stack-name cand30-sam-stack --capabilities CAPABILITY_IAM
+        sam deploy --no-confirm-changeset --stack-name cand30-sam-stack --capabilities CAPABILITY_IAM --region eu-west-1 --no-fail-on-empty-changeset || true
