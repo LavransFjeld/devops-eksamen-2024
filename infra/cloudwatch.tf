@@ -14,7 +14,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_age_alarm" {
   evaluation_periods  = 1
   metric_name         = "ApproximateAgeOfOldestMessage"
   namespace           = "AWS/SQS"
-  period              = 60 # Check every 60 seconds
+  period              = 60
   statistic           = "Maximum"
   threshold           = var.alarm_threshold
 

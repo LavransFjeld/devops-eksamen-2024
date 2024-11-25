@@ -37,7 +37,7 @@ variable "lambda_function_name" {
 variable "alarm_email" {
   description = "Email address for CloudWatch alarm notifications"
   type        = string
-  default = "cand30@gmail.com"
+  default = "lafj003@student.kristiania.no"
 }
 
 variable "alarm_threshold" {
