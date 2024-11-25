@@ -2,7 +2,8 @@ name: Terraform Deploy
 
 on:
   push:
-    branches:
+    branches
+      - main
       - '**'
 
 jobs:
@@ -34,7 +35,7 @@ jobs:
           cd infra
           terraform init -reconfigure
           
-      - name: Terraform Plan/Apply
+      - name: Terraform Plan
         run: |
           cd infra
           if [[ "${{ github.ref_name }}" == "main" ]]; then
