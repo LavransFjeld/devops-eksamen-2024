@@ -39,6 +39,13 @@ resource "aws_iam_policy" "lambda_policy" {
         Effect   = "Allow"
         Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
         Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Effect: "Allow",
+        Action = [
+          "bedrock:InvokeModel"
+        ],
+        Resource = "*"
       }
     ]
   })
@@ -65,6 +72,6 @@ resource "aws_iam_policy" "lambda_sqs_permissions" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
-  role       = var.lambda_role_name
+  role       = aws_iam_role.lambda_execution_role.name
   policy_arn = aws_iam_policy.lambda_policy.arn
 }

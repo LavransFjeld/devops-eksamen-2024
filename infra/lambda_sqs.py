@@ -1,26 +1,57 @@
-import json
+import base64
 import boto3
+import json
+import random
 import os
 
-s3_client = boto3.client('s3')
+# Frank; This is probalby be closer to what we need in production. Let's get funding first!
+
+bedrock_client = boto3.client("bedrock-runtime", region_name="us-east-1")
+s3_client = boto3.client("s3")
+
+MODEL_ID = "amazon.titan-image-generator-v1"
+BUCKET_NAME = os.environ["BUCKET_NAME"]
 
 def lambda_handler(event, context):
-    for record in event['Records']:
-        body = json.loads(record['body'])
-        prompt = body.get('prompt')
+    print("Event received:", event)
+    # Loop through all SQS records in the event
+    for record in event["Records"]:
+        # Extract the SQS message body
+        prompt = record["body"]
+        seed = random.randint(0, 2147483647)
+        s3_image_path = f"titan_{seed}.png"
+    
+        candidate_number = os.environ["CANDIDATE_NUMBER"]
+        file_key = f"{candidate_number}/{s3_image_path}"
+        
+        # Prepare the request for image generation
+        native_request = {
+            "taskType": "TEXT_IMAGE",
+            "textToImageParams": {"text": prompt},
+            "imageGenerationConfig": {
+                "numberOfImages": 1,
+                "quality": "standard",
+                "cfgScale": 8.0,
+                "height": 512,
+                "width": 512,
+                "seed": seed,
+            },
+        }
 
-        if not prompt:
-            print("No prompt provided, skipping...")
-            continue
+        # Invoke the model
+        response = bedrock_client.invoke_model(
+            modelId=MODEL_ID,
+            body=json.dumps(native_request)
+        )
 
-        # Simulate image processing logic
-        image_data = f"Image data for prompt: {prompt}".encode('utf-8')
+        model_response = json.loads(response["body"].read())
+        base64_image_data = model_response["images"][0]
+        image_data = base64.b64decode(base64_image_data)
 
-        # Upload the processed "image" to S3
-        bucket_name = os.environ['BUCKET_NAME']
-        file_path = f"{prompt}.txt"  # Simulating text files for images
+        # Upload the image to S3
+        s3_client.put_object(Bucket=BUCKET_NAME, Key=file_key, Body=image_data)
 
-        s3_client.put_object(Bucket=bucket_name, Key=file_path, Body=image_data)
-        print(f"Uploaded {file_path} to {bucket_name}")
-
-    return {"statusCode": 200, "body": "Messages processed"}
+    return {
+        "statusCode": 200,
+        "body": json.dumps("")
+    }

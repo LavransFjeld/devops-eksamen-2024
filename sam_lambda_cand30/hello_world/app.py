@@ -4,7 +4,7 @@ import json
 import random
 import os
 
-# Set up the AWS clients
+
 bedrock_client = boto3.client("bedrock-runtime", region_name="us-east-1")
 s3_client = boto3.client("s3")
 
@@ -13,8 +13,8 @@ BUCKET_NAME = os.environ["BUCKET_NAME"]
 
 def lambda_handler(event, context):
     print("Event received:", event)
+
     
-    # Extract the POST request body
     body = json.loads(event["body"])
     prompt = body.get("prompt", "Default prompt if none provided")
 
@@ -29,8 +29,8 @@ def lambda_handler(event, context):
 
     candidate_number = os.environ["CANDIDATE_NUMBER"]
     file_key = f"{candidate_number}/{s3_image_path}"
+
     
-    # Prepare the request for the Bedrock model
     native_request = {
         "taskType": "TEXT_IMAGE",
         "textToImageParams": {"text": prompt},
@@ -45,21 +45,21 @@ def lambda_handler(event, context):
     }
 
     try:
-        # Invoke the Bedrock model
+        
         response = bedrock_client.invoke_model(
             modelId=MODEL_ID,
             body=json.dumps(native_request)
         )
         model_response = json.loads(response["body"].read())
         
-        # Extract and decode the Base64 image data
+        
         base64_image_data = model_response["images"][0]
         image_data = base64.b64decode(base64_image_data)
         
-        # Upload the image to S3
+        
         s3_client.put_object(Bucket=BUCKET_NAME, Key=file_key, Body=image_data)
         
-        # Return the S3 path of the generated image
+        
         return {
             "statusCode": 200,
             "body": json.dumps({

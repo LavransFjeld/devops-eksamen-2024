@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "candidate_number" {
-  description = "Candidate number to ensure unique resource naming"
+  description = "Candidate number"
   type        = string
   default     = "30"
 }
