@@ -35,7 +35,7 @@ jobs:
           cd infra
           terraform init -reconfigure
           
-      - name: Terraform Plan
+      - name: Terraform plan
         run: |
           cd infra
           if [[ "${{ github.ref_name }}" == "main" ]]; then
