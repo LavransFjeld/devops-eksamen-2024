@@ -13,7 +13,7 @@ https://github.com/LavransFjeld/devops-eksamen-2024/actions/runs/12020378959/job
 
 ### B:
 Terraform plan:
-https://github.com/LavransFjeld/devops-eksamen-2024/actions/runs/12020378959/job/33508868744
+https://github.com/LavransFjeld/devops-eksamen-2024/actions/runs/12020998629
 
 
 ### SQS_QUEUE_URL:
@@ -23,16 +23,19 @@ https://sqs.eu-west-1.amazonaws.com/244530008913/image-processing-queue-30
 ## Oppgave 3
 ### A:
 Tag navn: sqs-tester-client
+
 begrunnelse: fordi det er en client som skal teste sqs-løsningene
 
 ### B:
-Container image: lavransf/sqs-tester-client
+Container image: lavransf/sqs-tester-
+
 SQS URL: https://sqs.eu-west-1.amazonaws.com/244530008913/image-processing-queue-30
 
 
 ## Oppgave 4
 ### A:
 
+cloudwatch.tf
 
 ## Oppgave 5
 
